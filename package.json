@@ -4,7 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
+<<<<<<< HEAD
+    "predev": "node scripts/generate-sw.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/generate-sw.mjs",
+=======
+    "dev": "vite",
+>>>>>>> 2861bbfac9922a545d10ba9433f6014aeba8cde6
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc -p tsconfig.json --noEmit"

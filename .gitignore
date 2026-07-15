@@ -24,3 +24,9 @@ pnpm-debug.log*
 
 # Vercel
 .vercel
+<<<<<<< HEAD
+
+# Generated at build/dev time by scripts/generate-sw.mjs — see sw/firebase-messaging-sw.template.js
+public/firebase-messaging-sw.js
+=======
+>>>>>>> 2861bbfac9922a545d10ba9433f6014aeba8cde6

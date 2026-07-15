@@ -58,6 +58,25 @@ npm run dev
    domains**, add your Vercel domain (e.g. `your-app.vercel.app`, plus any
    custom domain) so sign-in works from production.
 
+<<<<<<< HEAD
+## Notes on push notifications (FCM service worker)
+
+`public/firebase-messaging-sw.js` is **generated, not committed** — it's built
+from `sw/firebase-messaging-sw.template.js` by `scripts/generate-sw.mjs`,
+which runs automatically before `npm run dev` and `npm run build` (via the
+`predev`/`prebuild` npm hooks) and substitutes your `VITE_FIREBASE_*` env vars
+into it. This keeps the service worker self-initializing (required by modern
+browsers — Firebase must be initialized synchronously when the worker script
+first evaluates, not later via `postMessage`), while still sourcing config
+from Vercel env vars instead of hardcoding it.
+
+If you ever see a browser console warning like *"Event handler of 'push'
+event must be added on the initial evaluation of worker script"*, it means
+something is initializing Firebase Messaging lazily in the service worker
+again — check `sw/firebase-messaging-sw.template.js`.
+
+=======
+>>>>>>> 2861bbfac9922a545d10ba9433f6014aeba8cde6
 ## Scripts
 
 - `npm run dev` — local dev server
