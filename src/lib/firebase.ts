@@ -4,7 +4,7 @@
 // or locally in a .env.local file (never commit that file).
 
 import { initializeApp, getApps } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeFirestore, getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getMessaging, isSupported } from "firebase/messaging";
 
@@ -20,7 +20,20 @@ const firebaseConfig = {
 
 // Prevent duplicate initialization during hot-reload
 export const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-export const db  = getFirestore(app);
+
+// ignoreUndefinedProperties: optional task fields (expenseAmount, reminderTimeBefore, etc.)
+// are frequently `undefined` rather than omitted — Firestore rejects `undefined` by default,
+// so without this every setDoc() on a task missing an optional field throws.
+export const db = (() => {
+  try {
+    return initializeFirestore(app, { ignoreUndefinedProperties: true });
+  } catch {
+    // initializeFirestore throws if Firestore was already initialized for this app
+    // (e.g. hot-reload) — fall back to the existing instance.
+    return getFirestore(app);
+  }
+})();
+
 export const auth = getAuth(app);
 
 /** Returns the Messaging instance only in browsers that support FCM, null otherwise. */
