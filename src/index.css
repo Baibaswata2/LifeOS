@@ -8,35 +8,35 @@
 }
 
 :root {
-  --background: 0 0% 4%; /* #0a0a0a */
-  --foreground: 0 0% 100%;
+  --background: 210 40% 98%; /* #F9FAFB */
+  --foreground: 222 47% 11%; /* #0f172a */
   
-  --card: 0 0% 6%;
-  --card-foreground: 0 0% 100%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
   
-  --popover: 0 0% 6%;
-  --popover-foreground: 0 0% 100%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
   
-  --primary: 160 84% 39%; /* Emerald 500 */
-  --primary-foreground: 0 0% 0%;
+  --primary: 243 75% 59%; /* Indigo 600 */
+  --primary-foreground: 0 0% 100%;
   
-  --secondary: 0 0% 15%;
-  --secondary-foreground: 0 0% 100%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222 47% 11.2%;
   
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 65%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
   
-  --accent: 160 84% 39%;
-  --accent-foreground: 0 0% 0%;
+  --accent: 243 75% 59%;
+  --accent-foreground: 0 0% 100%;
   
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 100%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
   
-  --border: 0 0% 15%;
-  --input: 0 0% 15%;
-  --ring: 160 84% 39%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 243 75% 59%;
   
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 }
 
 ::-webkit-scrollbar {
@@ -44,24 +44,31 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #F9FAFB;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #94a3b8;
 }
 
 body {
-  background-color: #0a0a0a;
-  color: #ffffff;
+  background-color: #F9FAFB;
+  color: #1e293b;
   font-family: var(--font-sans);
 }
 
 @layer utilities {
   .sepia-tint {
     filter: sepia(0.3) saturate(0.8) hue-rotate(15deg);
+  }
+  .custom-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  }
+  .glass-blur {
+    backdrop-filter: blur(8px);
+    background-color: rgba(255, 255, 255, 0.8);
   }
 }

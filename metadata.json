@@ -1,0 +1,6 @@
+{
+  "name": "Tojo's Workspace",
+  "description": "Personal Management System with automated task-transfer, budget ledger, active steps checklist, and calendar integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

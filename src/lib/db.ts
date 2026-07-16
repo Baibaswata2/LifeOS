@@ -412,3 +412,56 @@ export const getExpenses = (tasks: Task[]): ExpenseRecord[] =>
         ? new Date(t.completedAt).toISOString().split("T")[0]
         : t.startDate,
     }));
+
+/**
+ * Auto-transfers incomplete tasks from previous days to today's date.
+ * Keeps the task duration (difference in days between startDate and dueDate) exactly the same.
+ */
+export const autoTransferOverdueTasks = (tasks: Task[]): { updatedTasks: Task[]; didChange: boolean } => {
+  const now = new Date();
+  const getLocalDateStr = (d: Date) => {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+  const todayStr = getLocalDateStr(now);
+
+  const parseLocalJSDate = (dateStr: string) => {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day);
+  };
+
+  const today = parseLocalJSDate(todayStr);
+  let didChange = false;
+
+  const updatedTasks = tasks.map((task) => {
+    if (task.status === TaskStatus.INCOMPLETE) {
+      const start = parseLocalJSDate(task.startDate);
+      const diffTime = today.getTime() - start.getTime();
+      const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays > 0) {
+        // Shift task startDate and dueDate forward by diffDays
+        const newStart = new Date(start);
+        newStart.setDate(start.getDate() + diffDays);
+
+        const due = parseLocalJSDate(task.dueDate);
+        const newDue = new Date(due);
+        newDue.setDate(due.getDate() + diffDays);
+
+        const fmt = (d: Date) =>
+          `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+        didChange = true;
+        return {
+          ...task,
+          startDate: fmt(newStart),
+          dueDate: fmt(newDue),
+          reminderSent: false, // reset reminder check so it fires today!
+        };
+      }
+    }
+    return task;
+  });
+
+  return { updatedTasks, didChange };
+};
+

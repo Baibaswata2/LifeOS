@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from "react";
 import { X, Plus, Trash2, Calendar, Clock, ListChecks } from "lucide-react";
 import { Task, TaskStep, TaskType, StressLevel, RecurrenceType, ExpenseMode, TaskStatus } from "../types";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface TaskFormProps {
   taskToEdit?: Task | null;
@@ -97,10 +97,6 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
     setSteps(steps.filter((s) => s.id !== id));
   };
 
-  const handleStepToggle = (id: string) => {
-    setSteps(steps.map((s) => s.id === id ? { ...s, completed: !s.completed } : s));
-  };
-
   // Selection of potential child tasks for Super Task
   const eligibleChildTasks = allTasks.filter(
     (t) => t.taskType !== TaskType.SUPER && t.status !== TaskStatus.ARCHIVED && t.id !== (taskToEdit?.id || "")
@@ -121,7 +117,6 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
     // Calculate completion percentage
     let calculatedProgress = 0;
     if (taskType === TaskType.SUPER) {
-      // Handled automatically via database manager based on children
       const children = allTasks.filter((t) => selectedChildIds.includes(t.id));
       if (children.length > 0) {
         const total = children.reduce((acc, c) => acc + (c.status === TaskStatus.COMPLETED ? 100 : c.progress), 0);
@@ -138,7 +133,7 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
       objective: objective.trim() || undefined,
       category,
       priority,
-      stressLevel, // Locked if editing!
+      stressLevel,
       taskType,
       status: taskToEdit?.status || TaskStatus.INCOMPLETE,
       startDate,
@@ -164,38 +159,38 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="w-full max-w-2xl bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
+        className="w-full max-w-2xl bg-white border border-neutral-200 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
       >
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-neutral-800 bg-neutral-900/80 sticky top-0 z-10 shrink-0">
+        <div className="flex items-center justify-between p-6 border-b border-neutral-100 bg-white sticky top-0 z-10 shrink-0">
           <div>
-            <h2 className="text-xl font-light tracking-tight text-white">
+            <h2 className="text-xl font-light tracking-tight text-neutral-900">
               {isEditing ? "Edit Task" : "Create New Task"}
             </h2>
-            <p className="text-[10px] text-neutral-500 font-mono mt-1 uppercase tracking-[0.2em]">Workspace Database</p>
+            <p className="text-[10px] text-neutral-400 font-bold mt-1.5 uppercase tracking-[0.2em] font-mono">Workspace Database</p>
           </div>
           <button
             onClick={onClose}
-            className="text-neutral-500 hover:text-white transition-colors p-2 hover:bg-neutral-800 rounded-xl cursor-pointer"
+            className="text-neutral-400 hover:text-neutral-700 transition-colors p-2 hover:bg-neutral-50 rounded-xl cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Form Body - scrollable */}
-        <form id="task-form" onSubmit={handleSubmit} className="p-6 space-y-8 overflow-y-auto custom-scrollbar flex-1">
+        <form id="task-form" onSubmit={handleSubmit} className="p-6 space-y-6 overflow-y-auto custom-scrollbar flex-1">
           
           {/* Core Fields */}
-          <div className="space-y-5">
+          <div className="space-y-4">
             <div>
-              <label className="block text-[10px] font-semibold text-neutral-500 uppercase tracking-[0.2em] mb-2.5">
+              <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2">
                 Task Title *
               </label>
               <input
@@ -204,13 +199,13 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g., Renew passport, buy medicines, exam preparation..."
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl py-3 px-4 text-sm text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                className="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-3 px-4 text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600/15 transition-all"
                 autoFocus
               />
             </div>
 
             <div>
-              <label className="block text-[10px] font-semibold text-neutral-500 uppercase tracking-[0.2em] mb-2.5">
+              <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2">
                 Objective & Description
               </label>
               <textarea
@@ -218,7 +213,7 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
                 onChange={(e) => setObjective(e.target.value)}
                 placeholder="What is the final outcome of this task?"
                 rows={2}
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl py-3 px-4 text-sm text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all resize-none"
+                className="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-3 px-4 text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600/15 transition-all resize-none"
               />
             </div>
           </div>
@@ -226,13 +221,13 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
           {/* Grid Metadata */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             <div>
-              <label className="block text-[10px] font-semibold text-neutral-500 uppercase tracking-[0.2em] mb-2.5">
+              <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2">
                 Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl py-3 px-3 text-sm text-neutral-200 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                className="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-3 px-3 text-sm text-neutral-800 focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600/15 transition-all"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -243,13 +238,13 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
             </div>
 
             <div>
-              <label className="block text-[10px] font-semibold text-neutral-500 uppercase tracking-[0.2em] mb-2.5">
+              <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2">
                 Priority
               </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as any)}
-                className="w-full bg-neutral-950 border border-neutral-800 rounded-xl py-3 px-3 text-sm text-neutral-200 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                className="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-3 px-3 text-sm text-neutral-800 focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600/15 transition-all"
               >
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
@@ -259,19 +254,19 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
 
             {/* Stress Level Box */}
             <div>
-              <label className="block text-[10px] font-semibold text-neutral-500 uppercase tracking-[0.2em] mb-2.5">
+              <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2">
                 Stress Level {isEditing && <span className="text-red-500 font-bold ml-1">(LOCKED)</span>}
               </label>
               {isEditing ? (
-                <div className="w-full bg-neutral-950 border border-neutral-800 text-neutral-500 rounded-xl py-3 px-4 text-sm flex items-center gap-2 cursor-not-allowed">
-                  <span className="w-2.5 h-2.5 rounded-full bg-neutral-600"></span>
-                  <span className="font-mono">{stressLevel}</span>
+                <div className="w-full bg-neutral-50 border border-neutral-200 text-neutral-400 rounded-xl py-3 px-4 text-sm flex items-center gap-2 cursor-not-allowed">
+                  <span className="w-2.5 h-2.5 rounded-full bg-neutral-300"></span>
+                  <span className="font-mono font-bold text-xs">{stressLevel}</span>
                 </div>
               ) : (
                 <select
                   value={stressLevel}
                   onChange={(e) => setStressLevel(e.target.value as StressLevel)}
-                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl py-3 px-3 text-sm text-neutral-200 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                  className="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-3 px-3 text-sm text-neutral-800 focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600/15 transition-all"
                 >
                   {Object.values(StressLevel).map((lvl) => (
                     <option key={lvl} value={lvl}>
@@ -281,7 +276,7 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
                 </select>
               )}
               {!isEditing && (
-                <span className="text-[10px] font-mono text-neutral-500 mt-2 block opacity-70">
+                <span className="text-[9px] font-mono font-bold text-neutral-400 mt-2 block uppercase tracking-wider">
                   Permanent after creation.
                 </span>
               )}
@@ -290,7 +285,7 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
 
           {/* Task Format selection */}
           <div className="space-y-2.5">
-            <label className="block text-[10px] font-semibold text-neutral-500 uppercase tracking-[0.2em]">
+            <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest">
               Task Format Type
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -301,12 +296,12 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
                   onClick={() => setTaskType(type)}
                   className={`border p-4 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     taskType === type
-                      ? "border-emerald-500/50 bg-emerald-500/5 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.05)]"
-                      : "border-neutral-800 bg-neutral-950/50 text-neutral-400 hover:border-neutral-700 hover:bg-neutral-900"
+                      ? "border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm"
+                      : "border-neutral-200 bg-white text-neutral-500 hover:bg-neutral-50 hover:border-neutral-300"
                   }`}
                 >
-                  <span className="text-xs font-semibold uppercase tracking-wider">{type.split(" ")[0]}</span>
-                  <span className="text-[10px] font-mono opacity-60 text-center leading-tight">
+                  <span className="text-xs font-bold uppercase tracking-wider">{type.split(" ")[0]}</span>
+                  <span className="text-[10px] font-mono opacity-80 text-center leading-tight">
                     {type === TaskType.STANDARD && "Ordered sub-steps"}
                     {type === TaskType.CHECKLIST && "Simple list"}
                     {type === TaskType.SUPER && "Groups tasks"}
@@ -318,10 +313,10 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
 
           {/* Sub-steps Checklist */}
           {taskType !== TaskType.SUPER && (
-            <div className="border border-neutral-800 rounded-xl p-5 bg-neutral-950/30 space-y-4">
+            <div className="border border-neutral-200 rounded-2xl p-5 bg-neutral-50/50 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-neutral-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                  <ListChecks className="w-4 h-4 text-emerald-500/70" />
+                <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest flex items-center gap-2">
+                  <ListChecks className="w-4 h-4 text-emerald-600" />
                   <span>Sub-steps ({steps.length})</span>
                 </span>
               </div>
@@ -333,7 +328,7 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
                   value={newStepTitle}
                   onChange={(e) => setNewStepTitle(e.target.value)}
                   placeholder="Enter step title..."
-                  className="flex-1 bg-neutral-900 border border-neutral-800 rounded-lg py-2.5 px-3 text-sm text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
+                  className="flex-1 bg-white border border-neutral-200 rounded-lg py-2.5 px-3 text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-indigo-600 transition-colors"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
@@ -346,7 +341,7 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
                   value={newStepNote}
                   onChange={(e) => setNewStepNote(e.target.value)}
                   placeholder="Note (optional)"
-                  className="sm:w-1/3 bg-neutral-900 border border-neutral-800 rounded-lg py-2.5 px-3 text-sm text-neutral-200 placeholder-neutral-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
+                  className="sm:w-1/3 bg-white border border-neutral-200 rounded-lg py-2.5 px-3 text-sm text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-indigo-600 transition-colors"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();
@@ -357,7 +352,7 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
                 <button
                   type="button"
                   onClick={addStep}
-                  className="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-sm font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                  className="bg-neutral-850 hover:bg-neutral-700 text-white text-xs uppercase font-bold px-4 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Add</span>
@@ -370,18 +365,18 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
                   {steps.map((step, index) => (
                     <div
                       key={step.id}
-                      className="flex items-center justify-between gap-3 p-3 bg-neutral-900/50 border border-neutral-800 rounded-lg group"
+                      className="flex items-center justify-between gap-3 p-3 bg-white border border-neutral-200 rounded-xl group"
                     >
                       <div className="flex items-center gap-3">
                         {taskType === TaskType.STANDARD && (
-                          <span className="font-mono text-[10px] text-neutral-500 bg-neutral-950 px-2 py-1 rounded">
+                          <span className="font-mono text-[9px] font-bold text-neutral-400 bg-neutral-100 border border-neutral-200 px-2 py-0.5 rounded">
                             {index + 1}
                           </span>
                         )}
                         <div className="flex flex-col">
-                          <span className="text-sm text-neutral-200">{step.title}</span>
+                          <span className="text-sm font-semibold text-neutral-700">{step.title}</span>
                           {step.note && (
-                            <span className="text-xs text-neutral-500 mt-0.5">
+                            <span className="text-xs text-neutral-400 font-medium">
                               {step.note}
                             </span>
                           )}
@@ -390,7 +385,7 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
                       <button
                         type="button"
                         onClick={() => removeStep(step.id)}
-                        className="text-neutral-600 hover:text-red-400 p-1.5 rounded hover:bg-neutral-800 transition-colors opacity-0 group-hover:opacity-100"
+                        className="text-neutral-400 hover:text-red-500 p-1.5 rounded hover:bg-neutral-50 transition-colors opacity-0 group-hover:opacity-100"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -403,11 +398,11 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
 
           {/* Super Task Child Selections */}
           {taskType === TaskType.SUPER && (
-            <div className="border border-neutral-800 rounded-xl p-5 bg-neutral-950/30 space-y-4">
-              <span className="text-xs font-semibold text-neutral-400 uppercase tracking-[0.2em] block">
+            <div className="border border-neutral-200 rounded-2xl p-5 bg-neutral-50/50 space-y-4">
+              <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest block">
                 Link independent child tasks
               </span>
-              <p className="text-xs text-neutral-500 leading-relaxed">
+              <p className="text-xs text-neutral-500 leading-relaxed font-medium">
                 A Super Task is automatically compiled from independent child tasks. Its progress updates dynamically based on children.
               </p>
 
@@ -422,22 +417,22 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
                         onClick={() => toggleChildTaskSelection(ct.id)}
                         className={`text-left p-3.5 rounded-xl border text-sm transition-all cursor-pointer flex flex-col gap-2 ${
                           isSelected
-                            ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-400"
-                            : "border-neutral-800 bg-neutral-900/50 text-neutral-400 hover:border-neutral-700 hover:bg-neutral-900"
+                            ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                            : "border-neutral-200 bg-white text-neutral-500 hover:border-neutral-300 hover:bg-neutral-50"
                         }`}
                       >
-                        <span className="font-medium text-neutral-200 truncate w-full">{ct.title}</span>
-                        <div className="flex items-center gap-2 text-[10px] text-neutral-500 font-mono uppercase">
+                        <span className="font-semibold text-neutral-800 truncate w-full">{ct.title}</span>
+                        <div className="flex items-center gap-2 text-[9px] text-neutral-400 font-bold font-mono uppercase">
                           <span>{ct.category}</span>
                           <span>•</span>
-                          <span className={isSelected ? "text-emerald-500/70" : ""}>{ct.progress}%</span>
+                          <span className={isSelected ? "text-indigo-700" : ""}>{ct.progress}%</span>
                         </div>
                       </button>
                     );
                   })}
                 </div>
               ) : (
-                <div className="text-center py-6 text-neutral-600 text-xs font-mono border border-dashed border-neutral-800 rounded-xl">
+                <div className="text-center py-6 text-neutral-400 text-xs font-mono font-bold border border-dashed border-neutral-200 rounded-xl">
                   No independent active tasks available to link.
                 </div>
               )}
@@ -446,55 +441,55 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
 
           {/* Scheduling Dates & Times */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="border border-neutral-800 rounded-xl p-5 bg-neutral-950/30 space-y-4">
-              <span className="text-xs font-semibold text-neutral-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-emerald-500/70" />
+            <div className="border border-neutral-200 rounded-2xl p-5 bg-neutral-50/50 space-y-4">
+              <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-indigo-600" />
                 <span>Scheduling</span>
               </span>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider block mb-1.5">Start Date</label>
+                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1.5 font-mono">Start Date</label>
                   <input
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full bg-neutral-900 border border-neutral-800 rounded-lg p-2.5 text-sm text-neutral-200 focus:outline-none focus:border-emerald-500/50"
+                    className="w-full bg-white border border-neutral-200 rounded-lg p-2.5 text-xs text-neutral-800 focus:outline-none focus:border-indigo-600"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider block mb-1.5">Due Date</label>
+                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1.5 font-mono">Due Date</label>
                   <input
                     type="date"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    className="w-full bg-neutral-900 border border-neutral-800 rounded-lg p-2.5 text-sm text-neutral-200 focus:outline-none focus:border-emerald-500/50"
+                    className="w-full bg-white border border-neutral-200 rounded-lg p-2.5 text-xs text-neutral-800 focus:outline-none focus:border-indigo-600"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="border border-neutral-800 rounded-xl p-5 bg-neutral-950/30 space-y-4">
-              <span className="text-xs font-semibold text-neutral-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                <Clock className="w-4 h-4 text-emerald-500/70" />
+            <div className="border border-neutral-200 rounded-2xl p-5 bg-neutral-50/50 space-y-4">
+              <span className="text-xs font-bold text-neutral-500 uppercase tracking-widest flex items-center gap-2">
+                <Clock className="w-4 h-4 text-indigo-600" />
                 <span>Times</span>
               </span>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider block mb-1.5">Start Time</label>
+                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1.5 font-mono">Start Time</label>
                   <input
                     type="time"
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
-                    className="w-full bg-neutral-900 border border-neutral-800 rounded-lg p-2.5 text-sm text-neutral-200 focus:outline-none focus:border-emerald-500/50"
+                    className="w-full bg-white border border-neutral-200 rounded-lg p-2.5 text-xs text-neutral-800 focus:outline-none focus:border-indigo-600"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider block mb-1.5">Due Time</label>
+                  <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1.5 font-mono">Due Time</label>
                   <input
                     type="time"
                     value={dueTime}
                     onChange={(e) => setDueTime(e.target.value)}
-                    className="w-full bg-neutral-900 border border-neutral-800 rounded-lg p-2.5 text-sm text-neutral-200 focus:outline-none focus:border-emerald-500/50"
+                    className="w-full bg-white border border-neutral-200 rounded-lg p-2.5 text-xs text-neutral-800 focus:outline-none focus:border-indigo-600"
                   />
                 </div>
               </div>
@@ -503,14 +498,14 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
 
           {/* Recurrence and Expenses Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="border border-neutral-800 rounded-xl p-5 bg-neutral-950/30 space-y-4">
-              <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-[0.2em]">
+            <div className="border border-neutral-200 rounded-2xl p-5 bg-neutral-50/50 space-y-4">
+              <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest">
                 Recurrence
               </label>
               <select
                 value={recurrence}
                 onChange={(e) => setRecurrence(e.target.value as RecurrenceType)}
-                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-3 px-3 text-sm text-neutral-200 focus:outline-none focus:border-emerald-500/50 transition-colors"
+                className="w-full bg-white border border-neutral-200 rounded-lg py-3 px-3 text-sm text-neutral-850 focus:outline-none focus:border-indigo-600 transition-colors"
               >
                 {Object.values(RecurrenceType).map((rec) => (
                   <option key={rec} value={rec}>{rec}</option>
@@ -519,7 +514,7 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
 
               {recurrence === RecurrenceType.CUSTOM && (
                 <div>
-                  <label className="block text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1.5 font-mono">
                     Repeat Interval (Days)
                   </label>
                   <input
@@ -527,20 +522,20 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
                     min={1}
                     value={customDays}
                     onChange={(e) => setCustomDays(Math.max(1, Number(e.target.value)))}
-                    className="w-full bg-neutral-900 border border-neutral-800 rounded-lg p-2.5 text-sm text-neutral-200 focus:outline-none focus:border-emerald-500/50"
+                    className="w-full bg-white border border-neutral-200 rounded-lg p-2.5 text-xs text-neutral-800 focus:outline-none focus:border-indigo-600"
                   />
                 </div>
               )}
             </div>
 
-            <div className="border border-neutral-800 rounded-xl p-5 bg-neutral-950/30 space-y-4">
-              <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-[0.2em]">
+            <div className="border border-neutral-200 rounded-2xl p-5 bg-neutral-50/50 space-y-4">
+              <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest">
                 Expense Log
               </label>
               <select
                 value={expenseMode}
                 onChange={(e) => setExpenseMode(e.target.value as ExpenseMode)}
-                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-3 px-3 text-sm text-neutral-200 focus:outline-none focus:border-emerald-500/50 transition-colors"
+                className="w-full bg-white border border-neutral-200 rounded-lg py-3 px-3 text-sm text-neutral-850 focus:outline-none focus:border-indigo-600 transition-colors"
               >
                 <option value={ExpenseMode.DIRECT}>Fixed Expense (Upfront)</option>
                 <option value={ExpenseMode.AFTER_COMPLETION}>Variable (Enter after completion)</option>
@@ -548,7 +543,7 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
 
               {expenseMode === ExpenseMode.DIRECT && (
                 <div>
-                  <label className="block text-[10px] font-mono text-neutral-500 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-1.5 font-mono">
                     Amount (₹)
                   </label>
                   <input
@@ -558,7 +553,7 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
                     value={expenseAmount}
                     onChange={(e) => setExpenseAmount(e.target.value === "" ? "" : Number(e.target.value))}
                     placeholder="e.g. 1500"
-                    className="w-full bg-neutral-900 border border-neutral-800 rounded-lg p-2.5 text-sm text-neutral-200 focus:outline-none focus:border-emerald-500/50"
+                    className="w-full bg-white border border-neutral-200 rounded-lg p-2.5 text-xs text-neutral-800 focus:outline-none focus:border-indigo-600"
                   />
                 </div>
               )}
@@ -566,14 +561,14 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
           </div>
 
           {/* Browser Notifications Reminder */}
-          <div className="border border-neutral-800 rounded-xl p-5 bg-neutral-950/30">
-            <label className="block text-xs font-semibold text-neutral-400 uppercase tracking-[0.2em] mb-4">
+          <div className="border border-neutral-200 rounded-2xl p-5 bg-neutral-50/50">
+            <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-4">
               Push Notification Reminder
             </label>
             <select
               value={reminderTime}
               onChange={(e) => setReminderTime(Number(e.target.value))}
-              className="w-full bg-neutral-900 border border-neutral-800 rounded-lg py-3 px-3 text-sm text-neutral-200 focus:outline-none focus:border-emerald-500/50 transition-colors"
+              className="w-full bg-white border border-neutral-200 rounded-lg py-3 px-3 text-sm text-neutral-850 focus:outline-none focus:border-indigo-600 transition-colors"
             >
               <option value={-1}>No Reminder</option>
               <option value={0}>At time of event (Start Time)</option>
@@ -586,18 +581,18 @@ export default function TaskForm({ taskToEdit, allTasks, onSave, onClose }: Task
         </form>
 
         {/* Footer Actions */}
-        <div className="p-6 border-t border-neutral-800 bg-neutral-900/80 flex items-center justify-end gap-3 shrink-0">
+        <div className="p-6 border-t border-neutral-100 bg-neutral-50/50 flex items-center justify-end gap-3 shrink-0">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 text-sm font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-xl transition-colors cursor-pointer"
+            className="px-5 py-2.5 text-sm font-semibold text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 rounded-xl transition-colors cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="submit"
             form="task-form"
-            className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-black font-bold uppercase tracking-wider text-sm rounded-xl transition-all shadow-[0_4px_14px_rgba(16,185,129,0.15)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.25)] hover:-translate-y-0.5 cursor-pointer"
+            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold uppercase tracking-wider text-xs rounded-xl transition-all shadow-md cursor-pointer font-mono"
           >
             {isEditing ? "Save Changes" : "Create Task"}
           </button>

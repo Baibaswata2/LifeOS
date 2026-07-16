@@ -16,7 +16,6 @@ export default function ExpenseTracker({ tasks }: ExpenseTrackerProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
-    // We only need the date part really, but keeping it consistent
     setCurrentTime(new Date());
   }, []);
 
@@ -90,7 +89,7 @@ export default function ExpenseTracker({ tasks }: ExpenseTrackerProps) {
   // Map monthly data to SVG graph coordinates
   const graphWidth = 400;
   const graphHeight = 150;
-  const padding = 20;
+  const padding = 25;
 
   const points = monthlyData.map((d, index) => {
     const x = padding + (index * (graphWidth - 2 * padding)) / (monthlyData.length - 1);
@@ -111,32 +110,32 @@ export default function ExpenseTracker({ tasks }: ExpenseTrackerProps) {
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         
-        <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-xl space-y-2 shadow-sm relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <DollarSign className="w-12 h-12 text-white" />
+        <div className="bg-white border border-slate-200/80 p-6 rounded-2xl space-y-2 shadow-sm relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+            <DollarSign className="w-12 h-12 text-slate-900" />
           </div>
-          <span className="text-[10px] font-mono text-neutral-500 uppercase block tracking-[0.1em]">Today's Total</span>
-          <span className="text-3xl font-light text-white block font-mono">₹{todayTotal}</span>
-          <span className="text-[10px] font-mono text-emerald-500 block uppercase tracking-wider">Current Day</span>
+          <span className="text-[10px] font-mono text-slate-400 font-bold uppercase block tracking-widest">Today's Total</span>
+          <span className="text-3xl font-light text-slate-800 block font-mono">₹{todayTotal}</span>
+          <span className="text-[9px] font-mono text-indigo-600 font-bold block uppercase tracking-wider">Current Day</span>
         </div>
 
-        <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-xl space-y-2 shadow-sm relative overflow-hidden group">
-          <span className="text-[10px] font-mono text-neutral-500 uppercase block tracking-[0.1em]">This Week's Total</span>
-          <span className="text-3xl font-light text-white block font-mono">₹{weekTotal}</span>
-          <span className="text-[10px] font-mono text-neutral-500 block uppercase tracking-wider">Past 7 days</span>
+        <div className="bg-white border border-slate-200/80 p-6 rounded-2xl space-y-2 shadow-sm relative overflow-hidden group">
+          <span className="text-[10px] font-mono text-slate-400 font-bold uppercase block tracking-widest">This Week's Total</span>
+          <span className="text-3xl font-light text-slate-800 block font-mono">₹{weekTotal}</span>
+          <span className="text-[9px] font-mono text-slate-400 font-bold block uppercase tracking-wider">Past 7 days</span>
         </div>
 
-        <div className="bg-neutral-900 border border-emerald-900/40 p-6 rounded-xl space-y-2 shadow-sm relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl -mr-10 -mt-10" />
-          <span className="text-[10px] font-mono text-neutral-500 uppercase block tracking-[0.1em]">This Month's Total</span>
-          <span className="text-3xl font-light text-emerald-500 block font-mono">₹{monthTotal}</span>
-          <span className="text-[10px] font-mono text-neutral-500 block uppercase tracking-wider">Current Month</span>
+        <div className="bg-white border border-indigo-100 p-6 rounded-2xl space-y-2 shadow-sm relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl -mr-10 -mt-10" />
+          <span className="text-[10px] font-mono text-slate-400 font-bold uppercase block tracking-widest">This Month's Total</span>
+          <span className="text-3xl font-light text-indigo-700 block font-mono font-semibold">₹{monthTotal}</span>
+          <span className="text-[9px] font-mono text-slate-400 font-bold block uppercase tracking-wider">Current Month</span>
         </div>
 
-        <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-xl space-y-2 shadow-sm relative overflow-hidden group">
-          <span className="text-[10px] font-mono text-neutral-500 uppercase block tracking-[0.1em]">Total Active Ledger</span>
-          <span className="text-3xl font-light text-white block font-mono">₹{allTimeTotal}</span>
-          <span className="text-[10px] font-mono text-neutral-500 block uppercase tracking-wider">All time logged</span>
+        <div className="bg-white border border-slate-200/80 p-6 rounded-2xl space-y-2 shadow-sm relative overflow-hidden group">
+          <span className="text-[10px] font-mono text-slate-400 font-bold uppercase block tracking-widest">Total Active Ledger</span>
+          <span className="text-3xl font-light text-slate-800 block font-mono">₹{allTimeTotal}</span>
+          <span className="text-[9px] font-mono text-slate-400 font-bold block uppercase tracking-wider">All time logged</span>
         </div>
 
       </div>
@@ -144,43 +143,42 @@ export default function ExpenseTracker({ tasks }: ExpenseTrackerProps) {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
-        {/* Category Breakdown list with progress indicators */}
-        <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 space-y-6 shadow-sm">
-          <div className="flex items-center gap-3 border-b border-neutral-800 pb-4">
-            <div className="p-2 bg-emerald-500/10 rounded-lg">
-              <PieChart className="w-5 h-5 text-emerald-500" />
+        {/* Category Breakdown list */}
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-6 space-y-6 shadow-sm">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-indigo-50 border border-indigo-100 rounded-xl text-indigo-600">
+              <PieChart className="w-5 h-5" />
             </div>
-            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-300">Category breakdown</h3>
+            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">Category breakdown</h3>
           </div>
 
           {categoriesList.length > 0 ? (
             <div className="space-y-5">
               {categoriesList.map((cat, idx) => {
-                // Calculate percentage of month or all time
                 const pct = allTimeTotal > 0 ? Math.round((cat.value / allTimeTotal) * 100) : 0;
                 return (
                   <div key={cat.name} className="space-y-2">
-                    <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-neutral-200 font-medium uppercase tracking-wider">{cat.name}</span>
-                      <span className="text-neutral-400">
-                        ₹{cat.value} <span className="text-emerald-500/80 ml-1">({pct}%)</span>
+                    <div className="flex items-center justify-between text-xs font-mono font-semibold">
+                      <span className="text-slate-700 uppercase tracking-wider">{cat.name}</span>
+                      <span className="text-slate-500">
+                        ₹{cat.value} <span className="text-indigo-700 font-bold ml-1">({pct}%)</span>
                       </span>
                     </div>
 
                     {/* Custom progress bar */}
-                    <div className="w-full bg-neutral-950 h-2 rounded-full overflow-hidden border border-neutral-800/80">
+                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden border border-slate-200">
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: `${pct}%` }}
                         transition={{ duration: 1, ease: "easeOut" }}
                         className={`h-full rounded-full ${
                           idx === 0 
-                            ? "bg-emerald-500" 
+                            ? "bg-indigo-600" 
                             : idx === 1 
                               ? "bg-teal-500" 
                               : idx === 2 
                                 ? "bg-cyan-500" 
-                                : "bg-neutral-500"
+                                : "bg-slate-400"
                         }`}
                       ></motion.div>
                     </div>
@@ -189,20 +187,20 @@ export default function ExpenseTracker({ tasks }: ExpenseTrackerProps) {
               })}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center text-center py-12 text-neutral-500 space-y-3">
-              <PieChart className="w-10 h-10 opacity-20" />
-              <span className="text-xs font-mono">No categories expense data logged yet.</span>
+            <div className="flex flex-col items-center justify-center text-center py-12 text-slate-400 space-y-3">
+              <PieChart className="w-10 h-10 opacity-20 text-slate-300" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider">No categories data logged yet.</span>
             </div>
           )}
         </div>
 
         {/* Custom SVG Line/Area Trend Chart */}
-        <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 space-y-6 shadow-sm">
-          <div className="flex items-center gap-3 border-b border-neutral-800 pb-4">
-            <div className="p-2 bg-emerald-500/10 rounded-lg">
-              <TrendingUp className="w-5 h-5 text-emerald-500" />
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-6 space-y-6 shadow-sm">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <div className="p-2 bg-indigo-50 border border-indigo-100 rounded-xl text-indigo-600">
+              <TrendingUp className="w-5 h-5" />
             </div>
-            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-300">Historical Trend</h3>
+            <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">Historical Trend</h3>
           </div>
 
           <div className="flex items-center justify-center pt-4">
@@ -213,23 +211,23 @@ export default function ExpenseTracker({ tasks }: ExpenseTrackerProps) {
                 className="w-full h-auto overflow-visible"
               >
                 {/* Horizontal grid lines */}
-                <line x1={padding} y1={padding} x2={graphWidth - padding} y2={padding} stroke="#262626" strokeWidth="1" strokeDasharray="4 4" />
-                <line x1={padding} y1={graphHeight / 2} x2={graphWidth - padding} y2={graphHeight / 2} stroke="#262626" strokeWidth="1" strokeDasharray="4 4" />
-                <line x1={padding} y1={graphHeight - padding} x2={graphWidth - padding} y2={graphHeight - padding} stroke="#404040" strokeWidth="1.5" />
+                <line x1={padding} y1={padding} x2={graphWidth - padding} y2={padding} stroke="#f1f5f9" strokeWidth="1.5" strokeDasharray="4 4" />
+                <line x1={padding} y1={graphHeight / 2} x2={graphWidth - padding} y2={graphHeight / 2} stroke="#f1f5f9" strokeWidth="1.5" strokeDasharray="4 4" />
+                <line x1={padding} y1={graphHeight - padding} x2={graphWidth - padding} y2={graphHeight - padding} stroke="#cbd5e1" strokeWidth="2" />
 
                 {/* Shaded Area */}
                 <polygon 
                   points={areaPointsStr} 
                   fill="url(#trendGlow)" 
-                  opacity="0.15" 
+                  opacity="0.1" 
                 />
 
                 {/* Line Path */}
                 <polyline 
                   points={polylinePointsStr} 
                   fill="none" 
-                  stroke="#10b981" 
-                  strokeWidth="3" 
+                  stroke="#4f46e5" 
+                  strokeWidth="3.5" 
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
@@ -240,30 +238,30 @@ export default function ExpenseTracker({ tasks }: ExpenseTrackerProps) {
                     <circle 
                       cx={p.x} 
                       cy={p.y} 
-                      r="5" 
-                      fill="#0A0A0A" 
-                      stroke="#10b981" 
-                      strokeWidth="2.5" 
+                      r="5.5" 
+                      fill="#ffffff" 
+                      stroke="#4f46e5" 
+                      strokeWidth="3" 
                     />
                     <text 
                       x={p.x} 
                       y={p.y - 12} 
-                      fontSize="10" 
+                      fontSize="9.5" 
                       fontFamily="monospace" 
-                      fill="#ffffff" 
+                      fill="#1e293b" 
                       textAnchor="middle"
-                      fontWeight="500"
+                      fontWeight="bold"
                     >
                       ₹{p.val}
                     </text>
                     <text 
                       x={p.x} 
-                      y={graphHeight - 2} 
-                      fontSize="10" 
+                      y={graphHeight - 4} 
+                      fontSize="9" 
                       fontFamily="monospace" 
-                      fill="#737373" 
+                      fill="#64748b" 
                       textAnchor="middle"
-                      fontWeight="500"
+                      fontWeight="bold"
                     >
                       {p.label}
                     </text>
@@ -273,8 +271,8 @@ export default function ExpenseTracker({ tasks }: ExpenseTrackerProps) {
                 {/* Gradient Definition */}
                 <defs>
                   <linearGradient id="trendGlow" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#10b981" />
-                    <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                    <stop offset="0%" stopColor="#4f46e5" />
+                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0" />
                   </linearGradient>
                 </defs>
               </svg>
@@ -282,7 +280,7 @@ export default function ExpenseTracker({ tasks }: ExpenseTrackerProps) {
             </div>
           </div>
           
-          <div className="text-[10px] font-mono text-neutral-500 text-center uppercase tracking-wider pt-2">
+          <div className="text-[9px] font-mono text-slate-400 text-center uppercase tracking-widest font-bold pt-2">
             Quarterly fiscal review
           </div>
         </div>
@@ -290,36 +288,36 @@ export default function ExpenseTracker({ tasks }: ExpenseTrackerProps) {
       </div>
 
       {/* Detailed Ledger List */}
-      <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 shadow-sm overflow-hidden">
-        <div className="flex items-center gap-3 border-b border-neutral-800 pb-5 mb-2">
-          <div className="p-2 bg-emerald-500/10 rounded-lg">
-            <CreditCard className="w-5 h-5 text-emerald-500" />
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 border-b border-slate-100 pb-5 mb-2">
+          <div className="p-2 bg-indigo-50 border border-indigo-100 rounded-xl text-indigo-600">
+            <CreditCard className="w-5 h-5" />
           </div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-300">Expense Ledger</h3>
+          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">Expense Ledger</h3>
         </div>
 
         {activeExpenses.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-sm">
               <thead>
-                <tr className="border-b border-neutral-800/80 font-mono text-neutral-500 uppercase tracking-widest text-[10px]">
-                  <th className="py-4 px-3 font-semibold">Task Details</th>
-                  <th className="py-4 px-3 font-semibold">Category</th>
-                  <th className="py-4 px-3 font-semibold">Date</th>
-                  <th className="py-4 px-3 text-right font-semibold">Amount</th>
+                <tr className="border-b border-slate-100 font-mono text-slate-400 uppercase tracking-widest text-[9px] font-bold">
+                  <th className="py-4 px-3">Task Details</th>
+                  <th className="py-4 px-3">Category</th>
+                  <th className="py-4 px-3">Date</th>
+                  <th className="py-4 px-3 text-right">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-800/50">
+              <tbody className="divide-y divide-slate-100">
                 {activeExpenses.map((exp) => (
-                  <tr key={exp.id} className="hover:bg-neutral-800/40 transition-colors">
-                    <td className="py-4 px-3 font-medium text-neutral-200">{exp.title}</td>
+                  <tr key={exp.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="py-4 px-3 font-semibold text-slate-800">{exp.title}</td>
                     <td className="py-4 px-3">
-                      <span className="px-2 py-1 rounded-md text-[10px] font-mono border border-neutral-700 bg-neutral-900 text-neutral-400 uppercase tracking-wider">
+                      <span className="px-2 py-1 rounded-md text-[9px] font-mono font-bold border border-slate-200 bg-slate-50 text-slate-500 uppercase tracking-wider">
                         {exp.category}
                       </span>
                     </td>
-                    <td className="py-4 px-3 font-mono text-neutral-400 text-xs">{exp.dateStr}</td>
-                    <td className="py-4 px-3 font-mono text-right text-emerald-500 font-medium">
+                    <td className="py-4 px-3 font-mono text-slate-400 text-xs font-semibold">{exp.dateStr}</td>
+                    <td className="py-4 px-3 font-mono text-right text-indigo-600 font-bold">
                       ₹{exp.amount.toLocaleString('en-IN')}
                     </td>
                   </tr>
@@ -328,10 +326,10 @@ export default function ExpenseTracker({ tasks }: ExpenseTrackerProps) {
             </table>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center text-center py-16 text-neutral-500 space-y-3">
-            <CreditCard className="w-12 h-12 opacity-20" />
-            <span className="text-xs font-mono uppercase tracking-widest">Ledger is empty</span>
-            <span className="text-sm opacity-80">Completed tasks with expenses will populate here.</span>
+          <div className="flex flex-col items-center justify-center text-center py-16 text-slate-400 space-y-3">
+            <CreditCard className="w-12 h-12 opacity-20 text-slate-300" />
+            <span className="text-xs font-mono uppercase tracking-widest font-bold">Ledger is empty</span>
+            <span className="text-xs text-slate-500 leading-relaxed">Completed tasks with expenses will populate here.</span>
           </div>
         )}
       </div>
